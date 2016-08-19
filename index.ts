@@ -144,13 +144,12 @@ export class DataClient extends events.EventEmitter {
     if (body.error) {
       this.emit('error', body);
     }
-    if (body.results.length) {
-      this.emit('fetchComplete', body.results);
-    }
+
+    this.emit('fetchComplete', body.results);
 
     // sleep
     await new Promise((resolve) => {
-      setTimeout(resolve, 1000);
+      setTimeout(resolve, 2000);
     });
 
     this.fetch(body.meta.next);
