@@ -2,9 +2,8 @@ node_modules
 .DS_Store
 Thumbs.db
 npm-debug.log
-*.map
-*.d.ts
-*.js
+*.ts
+!*.d.ts
 /typings
 *.tgz
 .idea
