@@ -1,0 +1,19 @@
+# EditorConfig is awesome: http://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+# Unix-style newlines with a newline ending every file
+[*]
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+
+# Matches multiple files with brace expansion notation
+# Set default charset
+[*.{ts,tsx,js,json,scss,less,css,yml}]
+indent_size = 2
+
+[*.{swig,html}]
+indent_size = 4

@@ -1,0 +1,29 @@
+{
+  "name": "Spidey SDK",
+  "version": "0.0.1",
+  "description": "Library for Spidey",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "prepublish": "tsc",
+    "postinstall": "typings install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MashGraph/spidey-sdk.git"
+  },
+  "keywords": [
+    "spidey",
+    "spidey sdk"
+  ],
+  "author": "tontonskie",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MashGraph/spidey-sdk/issues"
+  },
+  "homepage": "https://github.com/MashGraph/spidey-sdk#readme",
+  "dependencies": {
+    "request": "^2.74.0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "removeComments": false,
+    "noImplicitAny": false,
+    "pretty": true,
+    "declaration": true
+  },
+  "files": [
+    "typings/index.d.ts"
+  ],
+  "include": [
+    "**/*.ts"
+  ]
+}
