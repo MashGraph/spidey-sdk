@@ -45,12 +45,6 @@ export interface StdObject extends Object {
 
 export class Spidey extends events.EventEmitter {
   /**
-   * Spidey Hostname
-   * @type {string}
-   */
-  public static host = 'http://api.local.spidey.startupgarage.io';
-
-  /**
    * Algorithm for the crypto cipher
    * @type {string}
    */
@@ -61,6 +55,10 @@ export class Spidey extends events.EventEmitter {
    * @type {Map<string, WebCrawler>}
    */
   private static dataClientMap: Map<string, DataClient> = new Map<string, DataClient>();
+
+  constructor(private host: string) {
+    super();
+  }
 
   /**
    * Get an access token for your app
@@ -81,7 +79,7 @@ export class Spidey extends events.EventEmitter {
       }
     };
 
-    let response = await HttpClient.call('GET', Spidey.host+'/access', options);
+    let response = await HttpClient.call('GET', this.host+'/access', options);
 
     return JSON.parse(response['body']);
   }
@@ -97,7 +95,7 @@ export class Spidey extends events.EventEmitter {
   public createDataConnection(token: string, crawlerId: number, parserId: number, name?: string): DataClient {
     name = (name ? name : (crawlerId+parserId)) as string;
     if (!Spidey.dataClientMap.has(name)) {
-      Spidey.dataClientMap.set(name, new DataClient(token, crawlerId, parserId));
+      Spidey.dataClientMap.set(name, new DataClient(this.host, token, crawlerId, parserId));
     }
 
     return Spidey.dataClientMap.get(name) || null;
@@ -122,9 +120,10 @@ export class DataClient extends events.EventEmitter {
    */
   private url: string;
 
-  constructor(private token: string, private crawlerId: number, private parserId:number) {
+  constructor(private host: string, private token: string,
+              private crawlerId: number, private parserId:number) {
     super();
-    this.url = Spidey.host+'/crawlers/'+crawlerId+'/parsers/'+parserId+'/data';
+    this.url = host+'/crawlers/'+crawlerId+'/parsers/'+parserId+'/data';
   }
 
   /**
