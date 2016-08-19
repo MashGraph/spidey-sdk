@@ -12,7 +12,8 @@
     "declaration": true
   },
   "files": [
-    "typings/index.d.ts"
+    "typings/index.d.ts",
+    "index.ts"
   ],
   "include": [
     "**/*.ts"
