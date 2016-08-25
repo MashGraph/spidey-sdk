@@ -123,7 +123,7 @@ export class DataClient extends events.EventEmitter {
   constructor(private host: string, private token: string,
               private crawlerId: number, private parserId?:number) {
     super();
-    this.url = host + '/crawlers/' + crawlerId + (parserId ? '/parsers/' + parserId : '') + '/data';
+    this.url = host + `/crawlers/${crawlerId}/data` + (parserId ? `?parser_id=${parserId}` : '');
   }
 
   /**
