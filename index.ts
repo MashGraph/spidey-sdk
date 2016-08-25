@@ -92,8 +92,8 @@ export class Spidey extends events.EventEmitter {
    * @param {string} name
    * @returns {DataClient|null}
    */
-  public createDataConnection(token: string, crawlerId: number, parserId: number, name?: string): DataClient {
-    name = (name ? name : (crawlerId+parserId)) as string;
+  public createDataConnection(token: string, crawlerId: number, parserId?: number, name?: string): DataClient {
+    name = (name ? name : (`s${crawlerId}` + (parserId ? `s${parserId}` : '')))   as string;
     if (!Spidey.dataClientMap.has(name)) {
       Spidey.dataClientMap.set(name, new DataClient(this.host, token, crawlerId, parserId));
     }
@@ -121,9 +121,9 @@ export class DataClient extends events.EventEmitter {
   private url: string;
 
   constructor(private host: string, private token: string,
-              private crawlerId: number, private parserId:number) {
+              private crawlerId: number, private parserId?:number) {
     super();
-    this.url = host+'/crawlers/'+crawlerId+'/parsers/'+parserId+'/data';
+    this.url = host + '/crawlers/' + crawlerId + (parserId ? '/parsers/' + parserId : '') + '/data';
   }
 
   /**
@@ -152,7 +152,7 @@ export class DataClient extends events.EventEmitter {
       setTimeout(resolve, 2000);
     });
 
-    this.fetch(body.meta.next);
+    await this.fetch(body.meta.next);
   }
 
   /**
