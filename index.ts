@@ -119,6 +119,11 @@ export class DataClient extends events.EventEmitter {
    * Default Url for Data endpoint
    */
   private url: string;
+  /**
+   * fetchCompleteCallBack
+   * @type {Function}
+   */
+  private fetchCompleteCallBack: (data: StdObject[]) => void;
 
   constructor(private host: string, private token: string,
               private crawlerId: number, private parserId?:number) {
@@ -145,7 +150,7 @@ export class DataClient extends events.EventEmitter {
       this.emit('error', body);
     }
 
-    this.emit('fetchComplete', body.results);
+    await (async () => this.fetchCompleteCallBack(body.results))();
 
     // sleep
     await new Promise((resolve) => {
@@ -161,7 +166,7 @@ export class DataClient extends events.EventEmitter {
    * @return {this}
    */
   public onFetchComplete(fn: (data: StdObject) => void): this {
-    this.on('fetchComplete', fn);
+    this.fetchCompleteCallBack = fn;
     return this;
   }
 
