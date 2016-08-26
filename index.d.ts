@@ -33,7 +33,7 @@ export declare class Spidey extends events.EventEmitter {
      * @param {string} name
      * @returns {DataClient|null}
      */
-    createDataConnection(token: string, crawlerId: number, parserId: number, name?: string): DataClient;
+    createDataConnection(token: string, crawlerId: number, parserId?: number, name?: string): DataClient;
     /**
      * Get DataClient by name
      * @param  {string} name
@@ -53,7 +53,12 @@ export declare class DataClient extends events.EventEmitter {
      * Default Url for Data endpoint
      */
     private url;
-    constructor(host: string, token: string, crawlerId: number, parserId: number);
+    /**
+     * fetchCompleteCallBack
+     * @type {Function}
+     */
+    private fetchCompleteCallBack;
+    constructor(host: string, token: string, crawlerId: number, parserId?: number);
     /**
      * Get crawled data infinitely
      * @param {string} token

@@ -23,7 +23,7 @@ class HttpClient {
             requestLib(url, HttpClient.merge({}, opts, { method: method.toUpperCase() }), (err, response, body) => {
                 if (err)
                     return reject(err);
-                resolve({ response, body });
+                resolve({ response: response, body: body });
             });
         });
     }
@@ -55,7 +55,7 @@ class Spidey extends events.EventEmitter {
      * @returns {Promise<StdObject>}
      */
     getToken(key, secret) {
-        return __awaiter(this, void 0, void 0, function* () {
+        return __awaiter(this, void 0, Promise, function* () {
             let date = new Date();
             let cipher = crypto.createCipher(Spidey.algo, secret);
             let text = JSON.stringify({ key: key, time: date.getTime() });
@@ -80,7 +80,7 @@ class Spidey extends events.EventEmitter {
      * @returns {DataClient|null}
      */
     createDataConnection(token, crawlerId, parserId, name) {
-        name = (name ? name : (crawlerId + parserId));
+        name = (name ? name : (`s${crawlerId}` + (parserId ? `s${parserId}` : '')));
         if (!Spidey.dataClientMap.has(name)) {
             Spidey.dataClientMap.set(name, new DataClient(this.host, token, crawlerId, parserId));
         }
@@ -116,7 +116,7 @@ class DataClient extends events.EventEmitter {
         this.token = token;
         this.crawlerId = crawlerId;
         this.parserId = parserId;
-        this.url = host + '/crawlers/' + crawlerId + '/parsers/' + parserId + '/data';
+        this.url = host + `/crawlers/${crawlerId}/data` + (parserId ? `?parser_id=${parserId}` : '');
     }
     /**
      * Get crawled data infinitely
@@ -126,7 +126,7 @@ class DataClient extends events.EventEmitter {
      * @param {?}url
      */
     fetch(url) {
-        return __awaiter(this, void 0, void 0, function* () {
+        return __awaiter(this, void 0, Promise, function* () {
             let options = { headers: { 'token': this.token } };
             if (!url) {
                 url = this.url;
@@ -136,14 +136,12 @@ class DataClient extends events.EventEmitter {
             if (body.error) {
                 this.emit('error', body);
             }
-            if (body.results.length) {
-                this.emit('fetchComplete', body.results);
-            }
+            yield (() => __awaiter(this, void 0, void 0, function* () { return this.fetchCompleteCallBack(body.results); }))();
             // sleep
             yield new Promise((resolve) => {
-                setTimeout(resolve, 1000);
+                setTimeout(resolve, 2000);
             });
-            this.fetch(body.meta.next);
+            yield this.fetch(body.meta.next);
         });
     }
     /**
@@ -152,7 +150,7 @@ class DataClient extends events.EventEmitter {
      * @return {this}
      */
     onFetchComplete(fn) {
-        this.on('fetchComplete', fn);
+        this.fetchCompleteCallBack = fn;
         return this;
     }
     /**
